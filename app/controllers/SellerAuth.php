@@ -45,14 +45,24 @@ class SellerAuth extends Controller
                 );
 
                 if ($success) {
+                    $role = $this->model("UserModel")->getRoleById($user["id"])[
+                        "role"
+                    ];
+
                     if (isset($_SESSION["session"])) {
-                        $_SESSION["session"]["role"] = $this->model(
-                            "UserModel"
-                        )->getRoleById($user["id"])["role"];
+                        $_SESSION["session"]["role"] = $role;
                     } elseif (isset($_COOKIE["session"])) {
-                        $_COOKIE["session"]["role"] = $this->model(
-                            "UserModel"
-                        )->getRoleById($user["id"])["role"];
+                        $user = [
+                            "id" => $user["id"],
+                            "username" => $user["username"],
+                            "role" => $role,
+                        ];
+
+                        setcookie(
+                            "session",
+                            json_encode($user),
+                            time() + 60 * 60 * 24
+                        );
                     }
 
                     Flasher::setFlash(
