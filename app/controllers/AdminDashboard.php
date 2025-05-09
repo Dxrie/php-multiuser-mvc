@@ -19,7 +19,7 @@ class AdminDashboard extends Controller
         if (isset($_POST["logout"])) {
             session_destroy();
             setcookie("session", "", time() - 3600);
-            header("Location: login");
+            header("Location: ../login");
             exit();
         }
 
